@@ -1,3 +1,3 @@
-# Engineering Lab Template
+# SinglePipe Analytics System
 
-#### Template repository for engineering laboratories. Provides a structured workflow for managing tasks, experiments, research, implementations, roadmaps, and qualification progress across technical domains.
+#### An analytics and observability pipeline focused on event ingestion, schema validation, ClickHouse storage, batch inserts, event querying, Grafana dashboards, metrics, structured logs, tracing concepts, and production-style backend analytics flows.
