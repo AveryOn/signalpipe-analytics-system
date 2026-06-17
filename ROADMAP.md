@@ -4,1602 +4,1605 @@
 
 ### 001. Repository Structure
 
-Создать структуру репозитория для ingestion API, event schemas, ClickHouse, batch processing, query API, metrics, logs, tracing, dashboards, tests и документации.
+Create a repository structure for the ingestion API, event schemas, ClickHouse, batch processing, query API, metrics, logs, tracing, dashboards, tests, and documentation.
 
 ### 002. Runtime Configuration
 
-Реализовать типизированную конфигурацию приложения с проверкой environment variables при запуске.
+Implement typed application configuration with environment variable validation at startup.
 
 ### 003. Environment Profiles
 
-Поддержать отдельные конфигурации для local, test, development, staging и production environments.
+Support separate configurations for local, test, development, staging, and production environments.
 
 ### 004. Application Bootstrap
 
-Создать единый bootstrap приложения с инициализацией конфигурации, логирования, ClickHouse, metrics и graceful shutdown.
+Create a unified application bootstrap with initialization of configuration, logging, ClickHouse, metrics, and graceful shutdown.
 
 ### 005. Health Endpoints
 
-Реализовать endpoints для liveness, readiness и проверки доступности критических зависимостей.
+Implement endpoints for liveness, readiness, and checking availability of critical dependencies.
 
 ### 006. Error Model
 
-Создать единый тип ошибок приложения с кодом, сообщением, HTTP status и безопасной metadata.
+Create a unified application error type with a code, message, HTTP status, and safe metadata.
 
 ### 007. Response Contract
 
-Определить единый формат успешных ответов, ошибок, списков и pagination metadata.
+Define a unified format for successful responses, errors, lists, and pagination metadata.
 
 ### 008. Development Environment
 
-Подготовить локальное окружение с приложением, ClickHouse, Grafana и необходимыми observability-компонентами.
+Prepare a local environment with the application, ClickHouse, Grafana, and required observability components.
 
 ### 009. Seed Data
 
-Создать генератор тестовых событий для локальной разработки и демонстрации системы.
+Create a test event generator for local development and system demonstration.
 
 ### 010. System Documentation
 
-Описать назначение системы, архитектуру, основные потоки данных и правила запуска.
+Describe the system purpose, architecture, main data flows, and startup rules.
 
 ## Event Model
 
 ### 011. Base Event Schema
 
-Определить базовую структуру события с `eventId`, `eventName`, `timestamp`, `source`, `version` и `properties`.
+Define the base event structure with `eventId`, `eventName`, `timestamp`, `source`, `version`, and `properties`.
 
 ### 012. Event Metadata
 
-Добавить стандартную metadata: `userId`, `tenantId`, `sessionId`, `requestId`, `traceId`, `environment` и `service`.
+Add standard metadata: `userId`, `tenantId`, `sessionId`, `requestId`, `traceId`, `environment`, and `service`.
 
 ### 013. Event Identity
 
-Определить правила генерации и валидации уникального `eventId`.
+Define rules for generating and validating a unique `eventId`.
 
 ### 014. Event Naming Convention
 
-Зафиксировать формат именования событий и правила использования namespace.
+Record the event naming format and namespace usage rules.
 
 ### 015. Event Versioning
 
-Реализовать версионирование event schemas.
+Implement event schema versioning.
 
 ### 016. Event Source Model
 
-Определить типы источников событий: backend service, frontend application, worker, integration и system process.
+Define event source types: backend service, frontend application, worker, integration, and system process.
 
 ### 017. Event Category Model
 
-Добавить категории событий: business, product, technical, security и audit.
+Add event categories: business, product, technical, security, and audit.
 
 ### 018. Event Severity
 
-Определить уровни важности событий для технических и security-сценариев.
+Define event importance levels for technical and security scenarios.
 
 ### 019. Event Properties
 
-Зафиксировать допустимые типы значений внутри `properties`.
+Record allowed value types inside `properties`.
 
 ### 020. Nested Properties
 
-Определить правила хранения вложенных объектов и массивов в событиях.
+Define rules for storing nested objects and arrays in events.
 
 ### 021. Event Size Limit
 
-Добавить ограничение максимального размера одного события.
+Add a maximum size limit for one event.
 
 ### 022. Event Timestamp Rules
 
-Определить правила работы с client timestamp, server timestamp и ingestion timestamp.
+Define rules for working with client timestamp, server timestamp, and ingestion timestamp.
 
 ### 023. Late Events
 
-Определить обработку событий, поступивших значительно позже времени их возникновения.
+Define processing of events received significantly later than their occurrence time.
 
 ### 024. Future-Dated Events
 
-Реализовать проверку событий с timestamp из будущего.
+Implement validation of events with a future timestamp.
 
 ### 025. Duplicate Events
 
-Определить правила обнаружения и обработки событий с одинаковым `eventId`.
+Define rules for detecting and processing events with the same `eventId`.
 
 ### 026. Invalid Events
 
-Определить формат хранения или отклонения невалидных событий.
+Define the storage or rejection format for invalid events.
 
 ### 027. Sensitive Properties
 
-Создать список запрещённых или чувствительных полей, которые нельзя сохранять в analytics events.
+Create a list of prohibited or sensitive fields that cannot be stored in analytics events.
 
 ### 028. Property Sanitization
 
-Реализовать удаление или маскирование чувствительных значений.
+Implement removal or masking of sensitive values.
 
 ## Schema Registry
 
 ### 029. Event Schema Definition
 
-Создать формат описания схемы для каждого типа события.
+Create a schema description format for each event type.
 
 ### 030. Schema Registry Storage
 
-Реализовать хранилище зарегистрированных event schemas.
+Implement storage for registered event schemas.
 
 ### 031. Schema Registration API
 
-Создать API регистрации новой event schema.
+Create an API for registering a new event schema.
 
 ### 032. Schema Update API
 
-Реализовать обновление существующей схемы с проверкой совместимости.
+Implement updating an existing schema with compatibility validation.
 
 ### 033. Schema Retrieval API
 
-Создать API получения схемы по имени события и версии.
+Create an API for retrieving a schema by event name and version.
 
 ### 034. Schema Listing API
 
-Реализовать список всех зарегистрированных schemas.
+Implement a list of all registered schemas.
 
 ### 035. Schema Status
 
-Добавить статусы draft, active, deprecated и disabled.
+Add draft, active, deprecated, and disabled statuses.
 
 ### 036. Schema Activation
 
-Реализовать перевод схемы из draft в active.
+Implement transition of a schema from draft to active.
 
 ### 037. Schema Deprecation
 
-Реализовать устаревание схемы без немедленного удаления.
+Implement schema deprecation without immediate deletion.
 
 ### 038. Backward Compatibility
 
-Добавить проверку backward compatibility между версиями схемы.
+Add backward compatibility validation between schema versions.
 
 ### 039. Breaking Change Detection
 
-Определять удалённые обязательные поля и несовместимые изменения типов.
+Detect removed required fields and incompatible type changes.
 
 ### 040. Schema Validation Service
 
-Реализовать runtime-валидацию события по зарегистрированной схеме.
+Implement runtime validation of an event against a registered schema.
 
 ### 041. Unknown Event Policy
 
-Определить поведение при получении события неизвестного типа.
+Define behavior when receiving an event of an unknown type.
 
 ### 042. Unknown Property Policy
 
-Определить разрешены ли дополнительные свойства, отсутствующие в схеме.
+Define whether additional properties absent from the schema are allowed.
 
 ### 043. Required Property Validation
 
-Реализовать проверку обязательных свойств события.
+Implement validation of required event properties.
 
 ### 044. Property Type Validation
 
-Проверять string, number, boolean, enum, array, object и nullable значения.
+Validate string, number, boolean, enum, array, object, and nullable values.
 
 ### 045. Schema Validation Errors
 
-Создать структурированный формат ошибок валидации.
+Create a structured validation error format.
 
 ### 046. Schema Cache
 
-Добавить cache активных event schemas.
+Add a cache of active event schemas.
 
 ### 047. Schema Cache Invalidation
 
-Реализовать обновление cache после изменения схемы.
+Implement cache updates after a schema change.
 
 ### 048. Schema Audit Log
 
-Сохранять историю регистрации, изменения и отключения schemas.
+Store the history of schema registration, modification, and disabling.
 
 ## Event Ingestion API
 
 ### 049. Single Event Endpoint
 
-Реализовать endpoint приёма одного события.
+Implement an endpoint for receiving one event.
 
 ### 050. Batch Events Endpoint
 
-Реализовать endpoint приёма массива событий.
+Implement an endpoint for receiving an array of events.
 
 ### 051. Ingestion Authentication
 
-Добавить authentication для ingestion clients.
+Add authentication for ingestion clients.
 
 ### 052. Project API Keys
 
-Реализовать API keys, привязанные к конкретному проекту или источнику событий.
+Implement API keys bound to a specific project or event source.
 
 ### 053. API Key Hashing
 
-Хранить API keys только в виде hash.
+Store API keys only as hashes.
 
 ### 054. API Key Scopes
 
-Добавить scopes для отправки событий и управления schemas.
+Add scopes for sending events and managing schemas.
 
 ### 055. Request Validation
 
-Проверять структуру ingestion request до обработки отдельных событий.
+Validate the ingestion request structure before processing individual events.
 
 ### 056. Event Validation
 
-Валидировать каждое событие через schema registry.
+Validate each event through the schema registry.
 
 ### 057. Partial Batch Acceptance
 
-Поддержать частичное принятие batch, когда часть событий валидна, а часть отклонена.
+Support partial batch acceptance when some events are valid and others are rejected.
 
 ### 058. Atomic Batch Mode
 
-Добавить режим, в котором весь batch отклоняется при наличии хотя бы одной ошибки.
+Add a mode in which the entire batch is rejected if at least one error exists.
 
 ### 059. Ingestion Response
 
-Возвращать количество принятых, отклонённых и дублирующихся событий.
+Return the number of accepted, rejected, and duplicate events.
 
 ### 060. Client Event Indexes
 
-Возвращать индексы ошибочных событий внутри batch.
+Return indexes of erroneous events inside the batch.
 
 ### 061. Request Size Limit
 
-Ограничить максимальный размер ingestion request.
+Limit the maximum ingestion request size.
 
 ### 062. Batch Size Limit
 
-Ограничить максимальное количество событий в одном batch.
+Limit the maximum number of events in one batch.
 
 ### 063. Content Encoding
 
-Поддержать JSON и сжатые ingestion requests.
+Support JSON and compressed ingestion requests.
 
 ### 064. Request Decompression
 
-Реализовать безопасную обработку gzip-сжатых запросов.
+Implement safe processing of gzip-compressed requests.
 
 ### 065. Ingestion Rate Limiting
 
-Ограничить количество запросов и событий для одного API key.
+Limit the number of requests and events for one API key.
 
 ### 066. Tenant Quotas
 
-Добавить дневные и месячные лимиты ingestion по tenant или project.
+Add daily and monthly ingestion limits by tenant or project.
 
 ### 067. Idempotency
 
-Поддержать idempotency key для повторной отправки batch.
+Support an idempotency key for resending a batch.
 
 ### 068. Request Correlation
 
-Добавлять `requestId` и `traceId` к ingestion operation.
+Add `requestId` and `traceId` to the ingestion operation.
 
 ### 069. Server Timestamp
 
-Добавлять server-side ingestion timestamp.
+Add a server-side ingestion timestamp.
 
 ### 070. Source IP Metadata
 
-Опционально сохранять безопасную metadata об источнике запроса.
+Optionally store safe metadata about the request source.
 
 ### 071. User Agent Metadata
 
-Сохранять client SDK и его версию без записи лишних пользовательских данных.
+Store the client SDK and its version without recording unnecessary user data.
 
 ### 072. Ingestion Timeout
 
-Определить максимальное время обработки ingestion request.
+Define the maximum ingestion request processing time.
 
 ### 073. Backpressure Response
 
-Возвращать корректный ответ при перегрузке внутреннего buffer или ClickHouse.
+Return a correct response when the internal buffer or ClickHouse is overloaded.
 
 ### 074. Ingestion Metrics
 
-Собирать количество запросов, событий, ошибок, latency и payload size.
+Collect the number of requests, events, errors, latency, and payload size.
 
 ## Event Normalization
 
 ### 075. Event Normalizer
 
-Создать единый pipeline нормализации событий перед сохранением.
+Create a unified event normalization pipeline before storage.
 
 ### 076. Field Normalization
 
-Нормализовать пустые значения, timestamp, identifiers и enum fields.
+Normalize empty values, timestamps, identifiers, and enum fields.
 
 ### 077. Event Enrichment
 
-Добавлять server-side metadata к событию.
+Add server-side metadata to the event.
 
 ### 078. Environment Enrichment
 
-Добавлять environment, service name и deployment version.
+Add environment, service name, and deployment version.
 
 ### 079. Geo Enrichment Abstraction
 
-Подготовить abstraction для необязательного определения страны или региона по IP.
+Prepare an abstraction for optional country or region detection by IP.
 
 ### 080. Device Metadata Normalization
 
-Нормализовать device, browser и operating system metadata.
+Normalize device, browser, and operating system metadata.
 
 ### 081. Tenant Resolution
 
-Определять tenant и project по credentials запроса.
+Resolve tenant and project from request credentials.
 
 ### 082. Schema Version Resolution
 
-Определять актуальную версию схемы, если клиент её не передал.
+Resolve the current schema version if the client did not provide it.
 
 ### 083. Property Flattening
 
-Реализовать контролируемое преобразование вложенных properties для аналитических запросов.
+Implement controlled transformation of nested properties for analytical queries.
 
 ### 084. Reserved Property Names
 
-Запретить пользовательским событиям переопределять системные поля.
+Prohibit user events from overriding system fields.
 
 ### 085. Property Count Limit
 
-Ограничить максимальное количество properties в событии.
+Limit the maximum number of properties in an event.
 
 ### 086. String Length Limit
 
-Ограничить длину строковых значений.
+Limit the length of string values.
 
 ### 087. Numeric Range Validation
 
-Проверять допустимые диапазоны числовых значений.
+Validate allowed ranges of numeric values.
 
 ### 088. Normalization Metrics
 
-Собирать количество изменённых, удалённых и отклонённых полей.
+Collect the number of changed, removed, and rejected fields.
+
 
 ## Buffering and Batch Processing
 
 ### 089. In-Memory Event Buffer
 
-Реализовать временный buffer событий перед batch insert.
+Implement a temporary event buffer before batch insert.
 
 ### 090. Buffer Capacity
 
-Добавить ограничение максимального количества событий и занимаемой памяти.
+Add a limit on the maximum number of events and occupied memory.
 
 ### 091. Time-Based Flush
 
-Выполнять flush buffer через заданный интервал.
+Flush the buffer at a specified interval.
 
 ### 092. Size-Based Flush
 
-Выполнять flush при достижении заданного размера batch.
+Flush when the specified batch size is reached.
 
 ### 093. Manual Flush
 
-Добавить возможность принудительного flush.
+Add the ability to force a flush.
 
 ### 094. Batch Builder
 
-Формировать batch для ClickHouse с ограничением по размеру и количеству строк.
+Build a ClickHouse batch with limits on size and row count.
 
 ### 095. Concurrent Batch Inserts
 
-Поддержать ограниченное количество параллельных insert operations.
+Support a limited number of parallel insert operations.
 
 ### 096. Insert Queue
 
-Создать очередь batch inserts.
+Create a batch insert queue.
 
 ### 097. Queue Capacity
 
-Добавить максимальный размер очереди и политику перегрузки.
+Add a maximum queue size and overload policy.
 
 ### 098. Retryable Insert Errors
 
-Определить ошибки ClickHouse, после которых insert можно повторить.
+Define ClickHouse errors after which an insert can be retried.
 
 ### 099. Non-Retryable Insert Errors
 
-Определить ошибки, при которых batch должен быть отклонён или помещён в dead letter storage.
+Define errors for which the batch must be rejected or placed in dead letter storage.
 
 ### 100. Exponential Backoff
 
-Реализовать retries с exponential backoff и jitter.
+Implement retries with exponential backoff and jitter.
 
 ### 101. Batch Idempotency
 
-Предотвращать повторную вставку одного batch после ambiguous failure.
+Prevent duplicate insertion of one batch after an ambiguous failure.
 
 ### 102. Batch Identifiers
 
-Назначать уникальный identifier каждому batch.
+Assign a unique identifier to each batch.
 
 ### 103. Failed Batch Storage
 
-Сохранять failed batches для последующего анализа и replay.
+Store failed batches for subsequent analysis and replay.
 
 ### 104. Batch Replay
 
-Реализовать повторную обработку failed batch.
+Implement reprocessing of a failed batch.
 
 ### 105. Partial Insert Handling
 
-Определить поведение при частичном успехе insert operation.
+Define behavior when an insert operation partially succeeds.
 
 ### 106. Buffer Shutdown Flush
 
-Выполнять flush накопленных событий при graceful shutdown.
+Flush accumulated events during graceful shutdown.
 
 ### 107. Forced Shutdown Policy
 
-Определить поведение при невозможности завершить flush в пределах timeout.
+Define behavior when the flush cannot be completed within the timeout.
 
 ### 108. Memory Pressure Handling
 
-Замедлять ingestion или отклонять запросы при росте memory usage.
+Slow ingestion or reject requests when memory usage grows.
 
 ### 109. Buffer Metrics
 
-Собирать размер buffer, возраст старейшего события и количество flush operations.
+Collect buffer size, age of the oldest event, and number of flush operations.
 
 ### 110. Batch Metrics
 
-Собирать размер batch, insert latency, retries и failed batches.
+Collect batch size, insert latency, retries, and failed batches.
 
 ## Optional Queue Integration
 
 ### 111. Queue Abstraction
 
-Создать abstraction между ingestion API и storage worker.
+Create an abstraction between the ingestion API and the storage worker.
 
 ### 112. Direct Insert Adapter
 
-Реализовать режим прямой передачи событий во внутренний buffer.
+Implement a mode for direct transfer of events to the internal buffer.
 
 ### 113. Message Broker Adapter
 
-Подготовить adapter для RabbitMQ, Kafka или Redis Streams.
+Prepare an adapter for RabbitMQ, Kafka, or Redis Streams.
 
 ### 114. Event Producer
 
-Реализовать публикацию нормализованных событий в message broker.
+Implement publishing of normalized events to the message broker.
 
 ### 115. Event Consumer
 
-Реализовать consumer, читающий события и формирующий ClickHouse batches.
+Implement a consumer that reads events and builds ClickHouse batches.
 
 ### 116. Consumer Group
 
-Поддержать несколько consumer instances.
+Support multiple consumer instances.
 
 ### 117. Delivery Semantics
 
-Зафиксировать at-most-once, at-least-once или effectively-once модель доставки.
+Record the at-most-once, at-least-once, or effectively-once delivery model.
 
 ### 118. Consumer Offset Management
 
-Реализовать подтверждение обработки сообщений после успешной вставки.
+Implement acknowledgment of message processing after successful insertion.
 
 ### 119. Consumer Retries
 
-Повторять обработку временно неуспешных сообщений.
+Retry processing of temporarily unsuccessful messages.
 
 ### 120. Dead Letter Queue
 
-Перемещать необрабатываемые сообщения в DLQ.
+Move unprocessable messages to a DLQ.
 
 ### 121. DLQ Replay
 
-Реализовать контролируемый replay сообщений из DLQ.
+Implement controlled replay of messages from the DLQ.
 
 ### 122. Queue Lag Metrics
 
-Измерять lag, backlog и скорость обработки consumer.
+Measure lag, backlog, and consumer processing speed.
 
 ## ClickHouse Foundation
 
 ### 123. ClickHouse Client
 
-Создать типизированный adapter для выполнения ClickHouse queries и inserts.
+Create a typed adapter for executing ClickHouse queries and inserts.
 
 ### 124. Connection Configuration
 
-Настроить hosts, credentials, database, timeout и compression.
+Configure hosts, credentials, database, timeout, and compression.
 
 ### 125. Connection Health Check
 
-Проверять доступность ClickHouse через readiness endpoint.
+Check ClickHouse availability through the readiness endpoint.
 
 ### 126. ClickHouse Migrations
 
-Создать систему применения версионированных migrations.
+Create a system for applying versioned migrations.
 
 ### 127. Migration History
 
-Хранить историю выполненных migrations.
+Store the history of executed migrations.
 
 ### 128. Migration Lock
 
-Предотвращать одновременное выполнение migrations несколькими instances.
+Prevent simultaneous execution of migrations by multiple instances.
 
 ### 129. Event Table
 
-Создать основную таблицу хранения analytics events.
+Create the main table for storing analytics events.
 
 ### 130. Raw Event Table
 
-Создать таблицу для исходных или минимально преобразованных событий.
+Create a table for original or minimally transformed events.
 
 ### 131. Invalid Event Table
 
-Создать таблицу или отдельное хранилище для отклонённых событий.
+Create a table or separate storage for rejected events.
 
 ### 132. Engine Selection
 
-Исследовать и выбрать подходящий table engine для events.
+Research and select an appropriate table engine for events.
 
 ### 133. ORDER BY Strategy
 
-Определить ключ сортировки для типовых query patterns.
+Define the sort key for typical query patterns.
 
 ### 134. PARTITION BY Strategy
 
-Определить partitioning событий по времени или tenant.
+Define event partitioning by time or tenant.
 
 ### 135. PRIMARY KEY Strategy
 
-Определить primary key expression для ускорения аналитических запросов.
+Define the primary key expression for accelerating analytical queries.
 
 ### 136. Data Types
 
-Выбрать подходящие ClickHouse types для identifiers, timestamps, enums и properties.
+Select appropriate ClickHouse types for identifiers, timestamps, enums, and properties.
 
 ### 137. LowCardinality Fields
 
-Использовать `LowCardinality` для подходящих строковых измерений.
+Use `LowCardinality` for suitable string dimensions.
 
 ### 138. Nullable Fields
 
-Определить правила использования Nullable и default values.
+Define rules for using Nullable and default values.
 
 ### 139. JSON Properties
 
-Исследовать способы хранения динамических event properties.
+Research methods for storing dynamic event properties.
 
 ### 140. Typed Event Columns
 
-Выделить часто используемые аналитические поля в отдельные typed columns.
+Move frequently used analytical fields into separate typed columns.
 
 ### 141. Compression Codecs
 
-Настроить codecs для часто используемых типов данных.
+Configure codecs for frequently used data types.
 
 ### 142. Insert Format
 
-Выбрать эффективный формат batch inserts.
+Select an efficient batch insert format.
 
 ### 143. Insert Compression
 
-Использовать compression для уменьшения сетевого трафика.
+Use compression to reduce network traffic.
 
 ### 144. Deduplication Strategy
 
-Определить механизм дедупликации событий по `eventId`.
+Define an event deduplication mechanism by `eventId`.
 
 ### 145. ReplacingMergeTree Study
 
-Исследовать применение ReplacingMergeTree для дедупликации.
+Research the use of ReplacingMergeTree for deduplication.
 
 ### 146. MergeTree Behaviour
 
-Исследовать parts, merges, mutations и их влияние на производительность.
+Research parts, merges, mutations, and their impact on performance.
 
 ### 147. TTL Rules
 
-Настроить автоматическое удаление или перемещение старых данных.
+Configure automatic deletion or movement of old data.
 
 ### 148. Storage Policies
 
-Определить hot, warm и cold storage policies.
+Define hot, warm, and cold storage policies.
 
 ### 149. Table Size Metrics
 
-Собирать количество rows, parts, compressed size и uncompressed size.
+Collect row count, part count, compressed size, and uncompressed size.
 
 ### 150. Merge Metrics
 
-Наблюдать активные merges, mutation queue и background operations.
+Observe active merges, the mutation queue, and background operations.
 
 ## Aggregations and Materialized Views
 
 ### 151. Hourly Event Aggregation
 
-Создать materialized view с количеством событий по часу.
+Create a materialized view with event counts by hour.
 
 ### 152. Daily Event Aggregation
 
-Создать дневную агрегацию событий.
+Create a daily event aggregation.
 
 ### 153. Event Name Aggregation
 
-Агрегировать события по имени и времени.
+Aggregate events by name and time.
 
 ### 154. Tenant Aggregation
 
-Создать агрегаты по tenant и project.
+Create aggregates by tenant and project.
 
 ### 155. Unique Users Aggregation
 
-Реализовать расчёт приблизительного и точного количества уникальных пользователей.
+Implement calculation of approximate and exact unique-user counts.
 
 ### 156. Session Aggregation
 
-Создать агрегаты по пользовательским сессиям.
+Create aggregates by user sessions.
 
 ### 157. Error Event Aggregation
 
-Агрегировать технические ошибки по service, code и environment.
+Aggregate technical errors by service, code, and environment.
 
 ### 158. Latency Aggregation
 
-Хранить percentiles latency для технических событий.
+Store latency percentiles for technical events.
 
 ### 159. Funnel Aggregation
 
-Подготовить структуру данных для анализа последовательности пользовательских событий.
+Prepare a data structure for analyzing sequences of user events.
 
 ### 160. Retention Aggregation
 
-Подготовить данные для retention analysis.
+Prepare data for retention analysis.
 
 ### 161. Materialized View Backfill
 
-Реализовать заполнение materialized views для существующих данных.
+Implement filling materialized views for existing data.
 
 ### 162. Aggregation Rebuild
 
-Описать и реализовать пересоздание агрегатов после изменения логики.
+Describe and implement rebuilding aggregates after logic changes.
 
 ### 163. Aggregation Consistency
 
-Проверять согласованность raw events и aggregate tables.
+Check consistency between raw events and aggregate tables.
 
 ### 164. Aggregate Query Benchmark
 
-Сравнить запросы по raw table и pre-aggregated tables.
+Compare queries against the raw table and pre-aggregated tables.
 
 ## Event Query API
 
 ### 165. Event Search Endpoint
 
-Реализовать API поиска событий.
+Implement an event search API.
 
 ### 166. Filter by Event Name
 
-Добавить фильтрацию по имени события.
+Add filtering by event name.
 
 ### 167. Filter by Time Range
 
-Добавить обязательное или ограниченное временное окно поиска.
+Add a mandatory or limited search time window.
 
 ### 168. Filter by Tenant
 
-Ограничивать запросы tenant scope.
+Restrict queries to tenant scope.
 
 ### 169. Filter by User
 
-Добавить поиск событий конкретного пользователя.
+Add search for events of a specific user.
 
 ### 170. Filter by Session
 
-Добавить поиск событий внутри одной сессии.
+Add search for events within one session.
 
 ### 171. Filter by Source
 
-Поддержать фильтрацию по service, application или event source.
+Support filtering by service, application, or event source.
 
 ### 172. Property Filters
 
-Реализовать фильтрацию по event properties.
+Implement filtering by event properties.
 
 ### 173. Multiple Filters
 
-Поддержать комбинацию нескольких фильтров.
+Support a combination of multiple filters.
 
 ### 174. Query Sorting
 
-Добавить сортировку по времени и другим разрешённым полям.
+Add sorting by time and other allowed fields.
 
 ### 175. Cursor Pagination
 
-Реализовать cursor pagination для больших наборов событий.
+Implement cursor pagination for large event sets.
 
 ### 176. Query Limits
 
-Ограничить максимальное количество возвращаемых строк.
+Limit the maximum number of returned rows.
 
 ### 177. Query Timeout
 
-Ограничить максимальное время выполнения запроса.
+Limit maximum query execution time.
 
 ### 178. Query Complexity Validation
 
-Отклонять чрезмерно дорогие или широкие analytics queries.
+Reject excessively expensive or broad analytics queries.
 
 ### 179. Parameterized Queries
 
-Исключить конкатенацию пользовательских значений внутри SQL.
+Eliminate concatenation of user values inside SQL.
 
 ### 180. Query Builder
 
-Создать безопасный builder разрешённых ClickHouse queries.
+Create a safe builder for allowed ClickHouse queries.
 
 ### 181. Event Count Endpoint
 
-Реализовать получение количества событий за период.
+Implement retrieval of the number of events for a period.
 
 ### 182. Time Series Endpoint
 
-Возвращать временной ряд событий с настраиваемым interval.
+Return an event time series with a configurable interval.
 
 ### 183. Unique Users Endpoint
 
-Возвращать количество уникальных пользователей за период.
+Return the number of unique users for a period.
 
 ### 184. Top Events Endpoint
 
-Возвращать наиболее часто встречающиеся события.
+Return the most frequently occurring events.
 
 ### 185. Property Breakdown Endpoint
 
-Группировать события по указанному property.
+Group events by a specified property.
 
 ### 186. Error Analytics Endpoint
 
-Возвращать технические ошибки по code, service и environment.
+Return technical errors by code, service, and environment.
 
 ### 187. Query Metadata
 
-Возвращать duration, scanned rows и applied limits.
+Return duration, scanned rows, and applied limits.
 
 ### 188. Query Metrics
 
-Собирать количество запросов, latency, errors и scanned bytes.
+Collect the number of queries, latency, errors, and scanned bytes.
 
 ## Analytics Query Features
 
 ### 189. Funnel Query
 
-Реализовать анализ прохождения пользователей через последовательность событий.
+Implement analysis of users progressing through an event sequence.
 
 ### 190. Funnel Time Window
 
-Ограничить максимальное время прохождения funnel.
+Limit the maximum time for completing the funnel.
 
 ### 191. Funnel Conversion
 
-Рассчитывать conversion между шагами.
+Calculate conversion between steps.
 
 ### 192. Retention Query
 
-Реализовать cohort retention analysis.
+Implement cohort retention analysis.
 
 ### 193. Cohort Definition
 
-Поддержать формирование cohort по первому событию или property.
+Support cohort formation by the first event or property.
 
 ### 194. Sessionization
 
-Реализовать объединение событий в сессии по временному timeout.
+Implement grouping events into sessions by a time timeout.
 
 ### 195. User Journey Query
 
-Возвращать упорядоченную последовательность событий пользователя.
+Return an ordered sequence of user events.
 
 ### 196. Event Property Distribution
 
-Рассчитывать распределение числового property.
+Calculate the distribution of a numeric property.
 
 ### 197. Percentile Query
 
-Рассчитывать p50, p90, p95 и p99 для числовых значений.
+Calculate p50, p90, p95, and p99 for numeric values.
 
 ### 198. Cardinality Query
 
-Оценивать количество уникальных значений property.
+Estimate the number of unique property values.
 
 ### 199. Comparison Query
 
-Сравнивать два временных периода.
+Compare two time periods.
 
 ### 200. Time Zone Support
 
-Поддержать преобразование временных рядов в заданную timezone.
+Support transforming time series into a specified timezone.
 
 ### 201. Query Cache
 
-Добавить cache для часто повторяющихся analytics queries.
+Add a cache for frequently repeated analytics queries.
 
 ### 202. Query Cache Invalidation
 
-Определить TTL и правила обновления query cache.
+Define TTL and query cache refresh rules.
 
 ### 203. Saved Queries
 
-Реализовать сохранение заранее подготовленных analytics queries.
+Implement saving predefined analytics queries.
 
 ### 204. Query Templates
 
-Добавить параметризованные query templates для dashboards.
+Add parameterized query templates for dashboards.
+
 
 ## Metrics
 
 ### 205. Metrics Endpoint
 
-Реализовать Prometheus-compatible metrics endpoint.
+Implement a Prometheus-compatible metrics endpoint.
 
 ### 206. HTTP Request Metrics
 
-Собирать request count, latency, status codes и active requests.
+Collect request count, latency, status codes, and active requests.
 
 ### 207. Ingestion Metrics
 
-Собирать accepted, rejected, duplicate и malformed events.
+Collect accepted, rejected, duplicate, and malformed events.
 
 ### 208. Validation Metrics
 
-Собирать ошибки по event name, schema version и validation rule.
+Collect errors by event name, schema version, and validation rule.
 
 ### 209. Buffer Metrics
 
-Собирать buffer size, flush rate и oldest event age.
+Collect buffer size, flush rate, and oldest event age.
 
 ### 210. Batch Insert Metrics
 
-Собирать batch size, insert latency, retries и failures.
+Collect batch size, insert latency, retries, and failures.
 
 ### 211. ClickHouse Query Metrics
 
-Собирать query latency, scanned rows, scanned bytes и errors.
+Collect query latency, scanned rows, scanned bytes, and errors.
 
 ### 212. Queue Metrics
 
-Собирать queue depth, lag, publish rate и consume rate.
+Collect queue depth, lag, publish rate, and consume rate.
 
 ### 213. Runtime Metrics
 
-Собирать memory, CPU, event loop delay и active handles.
+Collect memory, CPU, event loop delay, and active handles.
 
 ### 214. Process Metrics
 
-Собирать uptime, restarts и open file descriptors.
+Collect uptime, restarts, and open file descriptors.
 
 ### 215. Business Metrics
 
-Собирать количество активных tenants, projects и event volume.
+Collect the number of active tenants, projects, and event volume.
 
 ### 216. Metric Naming Convention
 
-Зафиксировать правила именования metrics и labels.
+Record metric and label naming rules.
 
 ### 217. Metric Label Policy
 
-Ограничить high-cardinality labels.
+Limit high-cardinality labels.
 
 ### 218. Histogram Buckets
 
-Настроить buckets для HTTP, insert и query latency.
+Configure buckets for HTTP, insert, and query latency.
 
 ### 219. Metrics Registry
 
-Создать единый registry metrics приложения.
+Create a unified application metrics registry.
 
 ### 220. Custom Metrics API
 
-Создать внутренний API регистрации application metrics.
+Create an internal API for registering application metrics.
 
 ## Structured Logging
 
 ### 221. Structured Logger
 
-Реализовать JSON logger для всех компонентов системы.
+Implement a JSON logger for all system components.
 
 ### 222. Log Levels
 
-Определить trace, debug, info, warn, error и fatal уровни.
+Define trace, debug, info, warn, error, and fatal levels.
 
 ### 223. Standard Log Fields
 
-Добавлять timestamp, level, service, environment, version и hostname.
+Add timestamp, level, service, environment, version, and hostname.
 
 ### 224. Request Context
 
-Добавлять requestId, traceId, tenantId и API key identifier.
+Add requestId, traceId, tenantId, and API key identifier.
 
 ### 225. Event Context
 
-Добавлять eventId, eventName и schemaVersion к релевантным logs.
+Add eventId, eventName, and schemaVersion to relevant logs.
 
 ### 226. Batch Context
 
-Добавлять batchId, batchSize и retry attempt.
+Add batchId, batchSize, and retry attempt.
 
 ### 227. ClickHouse Query Context
 
-Добавлять queryId, operation type и duration.
+Add queryId, operation type, and duration.
 
 ### 228. Error Serialization
 
-Сохранять stack, error code и cause без потери структуры.
+Store stack, error code, and cause without losing structure.
 
 ### 229. Sensitive Data Sanitization
 
-Удалять credentials, API keys, tokens и запрещённые event properties из logs.
+Remove credentials, API keys, tokens, and prohibited event properties from logs.
 
 ### 230. Log Sampling
 
-Добавить sampling для высокочастотных неошибочных logs.
+Add sampling for high-frequency non-error logs.
 
 ### 231. Slow Operation Logging
 
-Логировать медленные inserts, queries и ingestion requests.
+Log slow inserts, queries, and ingestion requests.
 
 ### 232. Audit Logs
 
-Отделить административные действия от обычных application logs.
+Separate administrative actions from regular application logs.
 
 ### 233. Security Logs
 
-Логировать authentication failures, quota violations и подозрительные запросы.
+Log authentication failures, quota violations, and suspicious requests.
 
 ### 234. Logger Failure Behaviour
 
-Не допускать падения основного процесса из-за ошибки logging transport.
+Prevent the main process from crashing because of a logging transport error.
 
 ## Tracing
 
 ### 235. Trace Context Model
 
-Определить `traceId`, `spanId`, parent span и trace flags.
+Define `traceId`, `spanId`, parent span, and trace flags.
 
 ### 236. HTTP Ingestion Span
 
-Создавать span для ingestion request.
+Create a span for the ingestion request.
 
 ### 237. Validation Span
 
-Создавать span для schema lookup и event validation.
+Create a span for schema lookup and event validation.
 
 ### 238. Normalization Span
 
-Создавать span для normalization pipeline.
+Create a span for the normalization pipeline.
 
 ### 239. Buffer Span
 
-Отслеживать добавление события в buffer и ожидание flush.
+Track adding an event to the buffer and waiting for flush.
 
 ### 240. Batch Insert Span
 
-Создавать span для ClickHouse insert.
+Create a span for a ClickHouse insert.
 
 ### 241. Query Span
 
-Создавать span для ClickHouse analytics query.
+Create a span for a ClickHouse analytics query.
 
 ### 242. Queue Producer Span
 
-Передавать trace context при публикации события в broker.
+Propagate trace context when publishing an event to the broker.
 
 ### 243. Queue Consumer Span
 
-Продолжать trace при обработке сообщения consumer.
+Continue the trace when the consumer processes the message.
 
 ### 244. Trace Propagation
 
-Передавать trace context через HTTP headers и message metadata.
+Propagate trace context through HTTP headers and message metadata.
 
 ### 245. Span Attributes
 
-Добавлять безопасные attributes: tenant, eventName, batchSize и operation type.
+Add safe attributes: tenant, eventName, batchSize, and operation type.
 
 ### 246. Span Events
 
-Записывать retries, validation failures и overload events внутри span.
+Record retries, validation failures, and overload events inside the span.
 
 ### 247. Trace Sampling
 
-Настроить head-based sampling.
+Configure head-based sampling.
 
 ### 248. Error Trace Sampling
 
-Сохранять traces ошибочных операций с более высокой вероятностью.
+Preserve traces of failed operations with a higher probability.
 
 ### 249. OpenTelemetry Integration
 
-Интегрировать OpenTelemetry-compatible tracing.
+Integrate OpenTelemetry-compatible tracing.
 
 ### 250. Trace Exporter
 
-Подключить локальный backend для просмотра traces.
+Connect a local backend for viewing traces.
 
 ## Grafana Dashboards
 
 ### 251. System Overview Dashboard
 
-Создать dashboard общего состояния ingestion, storage, queries и runtime.
+Create a dashboard of the overall state of ingestion, storage, queries, and runtime.
 
 ### 252. Ingestion Dashboard
 
-Показать requests, accepted events, rejected events, throughput и latency.
+Show requests, accepted events, rejected events, throughput, and latency.
 
 ### 253. Schema Validation Dashboard
 
-Показать validation errors по event name, schema version и причине.
+Show validation errors by event name, schema version, and reason.
 
 ### 254. Buffer Dashboard
 
-Показать buffer size, flush frequency и oldest event age.
+Show buffer size, flush frequency, and oldest event age.
 
 ### 255. Batch Insert Dashboard
 
-Показать batch sizes, insert latency, retries и failures.
+Show batch sizes, insert latency, retries, and failures.
 
 ### 256. ClickHouse Dashboard
 
-Показать query latency, parts, merges, storage size и resource usage.
+Show query latency, parts, merges, storage size, and resource usage.
 
 ### 257. Query API Dashboard
 
-Показать query count, latency, timeout и scanned bytes.
+Show query count, latency, timeout, and scanned bytes.
 
 ### 258. Queue Dashboard
 
-Показать backlog, lag, publish rate, consume rate и DLQ size.
+Show backlog, lag, publish rate, consume rate, and DLQ size.
 
 ### 259. Runtime Dashboard
 
-Показать CPU, memory, event loop delay и process restarts.
+Show CPU, memory, event loop delay, and process restarts.
 
 ### 260. Error Dashboard
 
-Показать application errors, ClickHouse errors и failed batches.
+Show application errors, ClickHouse errors, and failed batches.
 
 ### 261. Tenant Usage Dashboard
 
-Показать ingestion volume и query usage по tenant.
+Show ingestion volume and query usage by tenant.
 
 ### 262. Event Volume Dashboard
 
-Показать наиболее частые события и изменение volume во времени.
+Show the most frequent events and volume changes over time.
 
 ### 263. SLO Dashboard
 
-Показать availability, ingestion latency, error rate и storage delay.
+Show availability, ingestion latency, error rate, and storage delay.
 
 ### 264. Dashboard Variables
 
-Добавить filters по environment, service, tenant и event name.
+Add filters by environment, service, tenant, and event name.
 
 ### 265. Dashboard Provisioning
 
-Хранить Grafana dashboards в репозитории и загружать автоматически.
+Store Grafana dashboards in the repository and load them automatically.
 
 ### 266. Dashboard Documentation
 
-Описать назначение каждого dashboard и интерпретацию panels.
+Describe the purpose of each dashboard and interpretation of panels.
 
 ## Alerts and SLO
 
 ### 267. Ingestion Availability SLI
 
-Определить показатель успешности ingestion requests.
+Define an indicator of ingestion request success.
 
 ### 268. Ingestion Latency SLI
 
-Измерять время от HTTP request до принятия события системой.
+Measure the time from the HTTP request until the event is accepted by the system.
 
 ### 269. Storage Delay SLI
 
-Измерять задержку между ingestion timestamp и появлением события в ClickHouse.
+Measure the delay between ingestion timestamp and the event appearing in ClickHouse.
 
 ### 270. Query Availability SLI
 
-Определить успешность analytics queries.
+Define analytics query success.
 
 ### 271. Query Latency SLI
 
-Измерять latency query API.
+Measure query API latency.
 
 ### 272. Ingestion SLO
 
-Зафиксировать целевую availability и latency ingestion.
+Record target ingestion availability and latency.
 
 ### 273. Query SLO
 
-Зафиксировать целевые показатели analytics queries.
+Record target analytics query indicators.
 
 ### 274. Error Budget
 
-Рассчитывать error budget для ingestion и query API.
+Calculate the error budget for ingestion and the query API.
 
 ### 275. High Rejection Rate Alert
 
-Создать alert на резкий рост невалидных событий.
+Create an alert for a sharp increase in invalid events.
 
 ### 276. Buffer Saturation Alert
 
-Создать alert на заполнение buffer.
+Create an alert for buffer saturation.
 
 ### 277. Insert Failure Alert
 
-Создать alert на repeated ClickHouse insert failures.
+Create an alert for repeated ClickHouse insert failures.
 
 ### 278. Storage Delay Alert
 
-Создать alert на рост времени доставки событий в ClickHouse.
+Create an alert for increased event delivery time to ClickHouse.
 
 ### 279. Queue Lag Alert
 
-Создать alert на рост consumer lag.
+Create an alert for increased consumer lag.
 
 ### 280. DLQ Growth Alert
 
-Создать alert на увеличение dead letter queue.
+Create an alert for growth of the dead letter queue.
 
 ### 281. ClickHouse Parts Alert
 
-Создать alert на чрезмерное количество active parts.
+Create an alert for an excessive number of active parts.
 
 ### 282. Query Latency Alert
 
-Создать alert на рост p95 и p99 query latency.
+Create an alert for growth in p95 and p99 query latency.
 
 ### 283. Memory Alert
 
-Создать alert на устойчивый рост process memory.
+Create an alert for sustained process memory growth.
 
 ### 284. Event Loop Delay Alert
 
-Создать alert на блокировку Node.js event loop.
+Create an alert for blocking of the Node.js event loop.
 
 ### 285. Alert Severity
 
-Определить warning, critical и informational severity.
+Define warning, critical, and informational severity.
 
 ### 286. Alert Runbook Links
 
-Связать каждый alert с operational runbook.
+Link each alert to an operational runbook.
 
 ## Security
 
 ### 287. Authentication Threat Model
 
-Провести анализ угроз для ingestion и query authentication.
+Conduct threat analysis for ingestion and query authentication.
 
 ### 288. Tenant Isolation
 
-Гарантировать tenant scope во всех ingestion и query operations.
+Guarantee tenant scope in all ingestion and query operations.
 
 ### 289. Query Authorization
 
-Проверять право пользователя на доступ к analytics project.
+Check the user's right to access the analytics project.
 
 ### 290. Schema Administration Authorization
 
-Ограничить регистрацию и изменение schemas административными permissions.
+Restrict schema registration and modification with administrative permissions.
 
 ### 291. API Key Rotation
 
-Реализовать безопасную смену ingestion API key.
+Implement secure replacement of an ingestion API key.
 
 ### 292. API Key Revocation
 
-Реализовать немедленный отзыв скомпрометированного ключа.
+Implement immediate revocation of a compromised key.
 
 ### 293. Request Replay Protection
 
-Ограничить повторное использование подписанных или timestamped requests.
+Limit repeated use of signed or timestamped requests.
 
 ### 294. Payload Abuse Protection
 
-Защитить ingestion API от чрезмерной вложенности, огромных строк и compression bombs.
+Protect the ingestion API from excessive nesting, huge strings, and compression bombs.
 
 ### 295. Query Injection Protection
 
-Не допускать передачу произвольного ClickHouse SQL через публичный API.
+Prevent arbitrary ClickHouse SQL from being passed through the public API.
 
 ### 296. Sensitive Event Detection
 
-Отклонять события, содержащие password, token, card data и другие запрещённые поля.
+Reject events containing passwords, tokens, card data, and other prohibited fields.
 
 ### 297. Data Encryption in Transit
 
-Использовать TLS для API, ClickHouse и observability connections.
+Use TLS for API, ClickHouse, and observability connections.
 
 ### 298. Data Retention Security
 
-Удалять данные после завершения допустимого retention period.
+Delete data after the permitted retention period ends.
 
 ### 299. Audit Trail
 
-Фиксировать управление schemas, keys, quotas и saved queries.
+Record management of schemas, keys, quotas, and saved queries.
 
 ### 300. Security Incident Events
 
-Создать специальные события для security monitoring.
+Create special events for security monitoring.
 
 ## Reliability
 
 ### 301. Graceful Shutdown
 
-Корректно останавливать HTTP server, buffer, workers, metrics и ClickHouse connections.
+Correctly stop the HTTP server, buffer, workers, metrics, and ClickHouse connections.
 
 ### 302. Dependency Startup Order
 
-Запускать приложение только после инициализации критических зависимостей.
+Start the application only after critical dependencies are initialized.
 
 ### 303. ClickHouse Outage Handling
 
-Определить поведение ingestion при временной недоступности ClickHouse.
+Define ingestion behavior during temporary ClickHouse unavailability.
 
 ### 304. Queue Outage Handling
 
-Определить поведение producers и consumers при недоступности broker.
+Define producer and consumer behavior when the broker is unavailable.
 
 ### 305. Grafana Outage Independence
 
-Гарантировать, что недоступность Grafana не влияет на ingestion.
+Guarantee that Grafana unavailability does not affect ingestion.
 
 ### 306. Metrics Export Failure
 
-Не допускать остановки основной обработки при проблемах metrics backend.
+Prevent primary processing from stopping because of metrics backend problems.
 
 ### 307. Retry Budget
 
-Ограничить общее количество retries и их влияние на систему.
+Limit the total number of retries and their impact on the system.
 
 ### 308. Circuit Breaker
 
-Добавить circuit breaker для ClickHouse и внешних observability exporters.
+Add a circuit breaker for ClickHouse and external observability exporters.
 
 ### 309. Bulkhead Isolation
 
-Разделить ресурсы ingestion, batch insertion и query API.
+Separate resources for ingestion, batch insertion, and the query API.
 
 ### 310. Load Shedding
 
-Отклонять часть запросов при перегрузке вместо неконтролируемого роста memory.
+Reject part of the requests under overload instead of allowing uncontrolled memory growth.
 
 ### 311. Read-Only Degraded Mode
 
-Поддержать query API при временной остановке ingestion.
+Support the query API while ingestion is temporarily stopped.
 
 ### 312. Ingestion-Only Degraded Mode
 
-Поддержать накопление событий при временной недоступности query subsystem.
+Support event accumulation while the query subsystem is temporarily unavailable.
 
 ### 313. Poison Event Handling
 
-Изолировать событие, постоянно вызывающее ошибку обработки.
+Isolate an event that continuously causes a processing error.
 
 ### 314. Failed Batch Recovery
 
-Создать процедуру восстановления failed batches.
+Create a procedure for recovering failed batches.
 
 ### 315. Data Consistency Check
 
-Сравнивать количество принятых, опубликованных и сохранённых событий.
+Compare the number of accepted, published, and stored events.
 
 ### 316. Duplicate Rate Monitoring
 
-Отслеживать долю повторно поступающих событий.
+Track the proportion of repeatedly received events.
 
 ### 317. Clock Skew Monitoring
 
-Отслеживать разницу между client timestamp и server timestamp.
+Track the difference between client timestamp and server timestamp.
 
 ### 318. Disaster Recovery
 
-Описать восстановление ClickHouse, schemas и configuration после потери окружения.
+Describe restoration of ClickHouse, schemas, and configuration after environment loss.
+
 
 ## Performance Testing
 
 ### 319. Ingestion Benchmark
 
-Измерить throughput single-event ingestion.
+Measure single-event ingestion throughput.
 
 ### 320. Batch Ingestion Benchmark
 
-Измерить throughput при разных размерах batch.
+Measure throughput with different batch sizes.
 
 ### 321. Validation Benchmark
 
-Сравнить стоимость валидации простых и сложных schemas.
+Compare the cost of validating simple and complex schemas.
 
 ### 322. Normalization Benchmark
 
-Измерить стоимость enrichment и property normalization.
+Measure the cost of enrichment and property normalization.
 
 ### 323. Buffer Benchmark
 
-Проверить влияние buffer size и flush interval.
+Check the impact of buffer size and flush interval.
 
 ### 324. Insert Batch Size Benchmark
 
-Найти эффективный размер ClickHouse batch.
+Find an efficient ClickHouse batch size.
 
 ### 325. Concurrent Insert Benchmark
 
-Определить оптимальное количество параллельных inserts.
+Determine the optimal number of parallel inserts.
 
 ### 326. Compression Benchmark
 
-Сравнить ingestion и insert с compression и без неё.
+Compare ingestion and inserts with and without compression.
 
 ### 327. Query Benchmark
 
-Измерить latency основных analytics queries.
+Measure latency of the main analytics queries.
 
 ### 328. Raw vs Aggregate Benchmark
 
-Сравнить запросы к raw и aggregate tables.
+Compare queries against raw and aggregate tables.
 
 ### 329. High Cardinality Benchmark
 
-Исследовать влияние высококардинальных properties.
+Research the impact of high-cardinality properties.
 
 ### 330. Wide Event Benchmark
 
-Исследовать события с большим количеством properties.
+Research events with a large number of properties.
 
 ### 331. Large Payload Benchmark
 
-Проверить обработку событий близких к максимальному размеру.
+Check processing of events close to the maximum size.
 
 ### 332. Sustained Load Test
 
-Провести длительный тест стабильной ingestion нагрузки.
+Conduct a long-running test of stable ingestion load.
 
 ### 333. Spike Test
 
-Проверить систему при резком кратковременном росте событий.
+Check the system during a sharp short-term increase in events.
 
 ### 334. Stress Test
 
-Найти пределы throughput и поведение после насыщения.
+Find throughput limits and behavior after saturation.
 
 ### 335. Recovery Test
 
-Проверить восстановление системы после завершения перегрузки.
+Check system recovery after overload ends.
 
 ### 336. Performance Report
 
-Зафиксировать результаты, bottlenecks и рекомендуемые limits.
+Record results, bottlenecks, and recommended limits.
 
 ## Testing
 
 ### 337. Event Schema Unit Tests
 
-Проверить базовые схемы и правила event model.
+Check base schemas and event model rules.
 
 ### 338. Validation Unit Tests
 
-Проверить required fields, types, enums и nested properties.
+Check required fields, types, enums, and nested properties.
 
 ### 339. Normalization Unit Tests
 
-Проверить преобразование timestamps, metadata и properties.
+Check transformation of timestamps, metadata, and properties.
 
 ### 340. Sanitization Unit Tests
 
-Проверить удаление sensitive data.
+Check removal of sensitive data.
 
 ### 341. Batch Builder Unit Tests
 
-Проверить формирование batch по размеру и количеству строк.
+Check batch formation by size and row count.
 
 ### 342. Retry Unit Tests
 
-Проверить backoff, jitter и retry limits.
+Check backoff, jitter, and retry limits.
 
 ### 343. Query Builder Unit Tests
 
-Проверить генерацию разрешённых queries и filters.
+Check generation of allowed queries and filters.
 
 ### 344. Tenant Isolation Tests
 
-Проверить невозможность доступа к данным другого tenant.
+Check impossibility of access to another tenant's data.
 
 ### 345. Ingestion Integration Tests
 
-Проверить полный flow от HTTP request до buffer.
+Check the complete flow from HTTP request to buffer.
 
 ### 346. ClickHouse Integration Tests
 
-Проверить migrations, inserts и queries на реальном ClickHouse.
+Check migrations, inserts, and queries on a real ClickHouse instance.
 
 ### 347. Batch Insert Integration Tests
 
-Проверить flush, retries и failed batch storage.
+Check flush, retries, and failed batch storage.
 
 ### 348. Schema Registry Integration Tests
 
-Проверить регистрацию, versioning и cache invalidation.
+Check registration, versioning, and cache invalidation.
 
 ### 349. Queue Integration Tests
 
-Проверить producer, consumer, acknowledgment и DLQ.
+Check producer, consumer, acknowledgment, and DLQ.
 
 ### 350. Query API Integration Tests
 
-Проверить filters, pagination, grouping и time series.
+Check filters, pagination, grouping, and time series.
 
 ### 351. Metrics Tests
 
-Проверить регистрацию и обновление metrics.
+Check registration and updating of metrics.
 
 ### 352. Logging Tests
 
-Проверить structured fields и sanitization.
+Check structured fields and sanitization.
 
 ### 353. Tracing Tests
 
-Проверить trace propagation между ingestion, queue и storage.
+Check trace propagation between ingestion, queue, and storage.
 
 ### 354. Failure Injection Tests
 
-Имитировать ClickHouse outage, timeout и connection reset.
+Simulate ClickHouse outage, timeout, and connection reset.
 
 ### 355. Duplicate Delivery Tests
 
-Проверить поведение при повторной доставке событий.
+Check behavior during repeated event delivery.
 
 ### 356. Graceful Shutdown Tests
 
-Проверить flush buffer и завершение активных операций.
+Check buffer flush and completion of active operations.
 
 ## Operations
 
 ### 357. Application Runbook
 
-Создать инструкцию запуска, остановки и проверки приложения.
+Create instructions for starting, stopping, and checking the application.
 
 ### 358. ClickHouse Runbook
 
-Описать проверку health, storage, parts, merges и query load.
+Describe health, storage, parts, merges, and query load checks.
 
 ### 359. High Rejection Runbook
 
-Описать расследование роста validation errors.
+Describe investigation of growth in validation errors.
 
 ### 360. Buffer Saturation Runbook
 
-Описать диагностику заполнения internal buffer.
+Describe diagnostics of internal buffer saturation.
 
 ### 361. Insert Failure Runbook
 
-Описать действия при невозможности записывать данные в ClickHouse.
+Describe actions when data cannot be written to ClickHouse.
 
 ### 362. Queue Lag Runbook
 
-Описать диагностику consumer lag.
+Describe diagnostics of consumer lag.
 
 ### 363. DLQ Runbook
 
-Описать просмотр, исправление и replay dead letter events.
+Describe viewing, correcting, and replaying dead letter events.
 
 ### 364. Slow Query Runbook
 
-Описать поиск и оптимизацию медленных ClickHouse queries.
+Describe finding and optimizing slow ClickHouse queries.
 
 ### 365. Storage Growth Runbook
 
-Описать контроль storage usage и изменение retention.
+Describe monitoring storage usage and changing retention.
 
 ### 366. Data Replay Runbook
 
-Описать безопасную повторную загрузку событий.
+Describe safe reloading of events.
 
 ### 367. Schema Rollback Runbook
 
-Описать восстановление после некорректного schema update.
+Describe recovery after an incorrect schema update.
 
 ### 368. API Key Incident Runbook
 
-Описать отзыв и rotation скомпрометированного ключа.
+Describe revocation and rotation of a compromised key.
 
 ### 369. Backup Procedure
 
-Создать процедуру резервного копирования schemas и критической metadata.
+Create a procedure for backing up schemas and critical metadata.
 
 ### 370. Restore Procedure
 
-Проверить восстановление системы из backup.
+Check system restoration from backup.
 
 ## Final System Tasks
 
 ### 371. Complete Ingestion Pipeline
 
-Собрать полный поток: API request, authentication, validation, normalization, buffering и ClickHouse insert.
+Build the complete flow: API request, authentication, validation, normalization, buffering, and ClickHouse insert.
 
 ### 372. Complete Queued Pipeline
 
-Собрать flow через broker: ingestion producer, consumer, batch insert, retries и DLQ.
+Build the flow through a broker: ingestion producer, consumer, batch insert, retries, and DLQ.
 
 ### 373. Complete Query Platform
 
-Собрать query API с filters, time series, aggregations, pagination и tenant isolation.
+Build the query API with filters, time series, aggregations, pagination, and tenant isolation.
 
 ### 374. Complete Observability Stack
 
-Связать metrics, structured logs, traces, dashboards и alerts.
+Connect metrics, structured logs, traces, dashboards, and alerts.
 
 ### 375. Production Dashboard Package
 
-Подготовить полный набор Grafana dashboards для ingestion, ClickHouse, queries и runtime.
+Prepare a complete set of Grafana dashboards for ingestion, ClickHouse, queries, and runtime.
 
 ### 376. Production Alert Package
 
-Подготовить alerts с severity, description и runbook links.
+Prepare alerts with severity, description, and runbook links.
 
 ### 377. Event SDK
 
-Создать небольшой TypeScript SDK для отправки single и batch events.
+Create a small TypeScript SDK for sending single and batch events.
 
 ### 378. SDK Retry Policy
 
-Добавить retries, timeout и idempotency в client SDK.
+Add retries, timeout, and idempotency to the client SDK.
 
 ### 379. SDK Buffering
 
-Добавить локальный batch buffer и периодический flush в SDK.
+Add a local batch buffer and periodic flush to the SDK.
 
 ### 380. SDK Shutdown Flush
 
-Обеспечить отправку накопленных событий при завершении приложения.
+Ensure accumulated events are sent when the application terminates.
 
 ### 381. Demo Application
 
-Создать приложение, генерирующее business и technical events.
+Create an application that generates business and technical events.
 
 ### 382. Demo Analytics Scenario
 
-Показать ingestion, запросы, dashboard, metrics, logs и trace одного end-to-end flow.
+Show ingestion, queries, a dashboard, metrics, logs, and a trace of one end-to-end flow.
 
 ### 383. Simulated Production Incident
 
-Смоделировать рост ingestion latency или ClickHouse insert failures.
+Simulate increased ingestion latency or ClickHouse insert failures.
 
 ### 384. Incident Investigation
 
-Провести расследование через metrics, logs, traces и ClickHouse system tables.
+Conduct an investigation through metrics, logs, traces, and ClickHouse system tables.
 
 ### 385. Incident Postmortem
 
-Оформить impact, timeline, root cause, resolution и preventive actions.
+Document impact, timeline, root cause, resolution, and preventive actions.
 
 ### 386. Architecture Documentation
 
-Описать компоненты, потоки данных, storage model, reliability и security boundaries.
+Describe components, data flows, storage model, reliability, and security boundaries.
 
 ### 387. Performance Report
 
-Зафиксировать пределы throughput, рекомендуемые batch sizes и query limits.
+Record throughput limits, recommended batch sizes, and query limits.
 
 ### 388. Security Review
 
-Проверить authentication, tenant isolation, payload sanitization и query safety.
+Check authentication, tenant isolation, payload sanitization, and query safety.
 
 ### 389. Operational Readiness Review
 
-Проверить health checks, dashboards, alerts, runbooks, backups и graceful shutdown.
+Check health checks, dashboards, alerts, runbooks, backups, and graceful shutdown.
 
 ### 390. Final Analytics Case Study
 
-Собрать законченное описание production-style analytics system: ingestion, schemas, buffering, ClickHouse, querying, observability, failures, performance и эксплуатация.
+Create a complete description of a production-style analytics system: ingestion, schemas, buffering, ClickHouse, querying, observability, failures, performance, and operations.
